@@ -40,7 +40,7 @@ def get_keywords(stock, url, joins):
                 keywords.append(kw['text'])
         st.session_state['keywords'] = joins.join(keywords)
     except Exception as e:
-        st.session_state['keywords'] = '\n'.join([str(e),str(page.text),str(page.status_code)])
+        st.session_state['keywords'] = e
     return None
 
 col1, col2 = st.columns([3,1])
