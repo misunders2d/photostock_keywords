@@ -20,8 +20,8 @@ def get_keywords(stock, url, joins):
             keywords = [i for i in select['props']['pageProps']['asset']['keywords']]
         elif 'getty' in url:
             session = HTMLSession()
-            response = session.get(url)
-            scripts = response.html.find('script')
+            page = session.get(url)
+            scripts = page.html.find('script')
             results = json.loads(scripts[5].text)
             kw_list = results['asset']['keywords']
             keywords = []
