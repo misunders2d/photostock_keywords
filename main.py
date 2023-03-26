@@ -1,10 +1,13 @@
 import streamlit as st
 import requests
-from selenium import webdriver 
-from selenium.webdriver import Chrome 
-from selenium.webdriver.chrome.service import Service 
-from selenium.webdriver.common.by import By 
-from webdriver_manager.chrome import ChromeDriverManager
+from selenium import webdriver
+from selenium.common.exceptions import TimeoutException
+from selenium.webdriver.common.by import By
+from selenium.webdriver.firefox.options import Options
+from selenium.webdriver.firefox.service import Service
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
+from webdriver_manager.firefox import GeckoDriverManager
 from bs4 import BeautifulSoup
 import json
 import time
@@ -24,18 +27,13 @@ def get_keywords(stock, url, joins):
                 select = json.loads(a)
             keywords = [i for i in select['props']['pageProps']['asset']['keywords']]
         elif 'getty' in url:
-            options = webdriver.ChromeOptions() 
-            options.headless = True # it's more scalable to work in headless mode 
-            # normally, selenium waits for all resources to download 
-            # we don't need it as the page also populated with the running javascript code. 
-            options.page_load_strategy = 'none' 
-            # this returns the path web driver downloaded 
-            chrome_path = ChromeDriverManager().install() 
-            chrome_service = Service(chrome_path) 
-            # pass the defined options and service objects to initialize the web driver 
-            page = Chrome(options=options, service=chrome_service) 
-            page.implicitly_wait(5)
-
+            firefoxOptions = Options()
+            firefoxOptions.add_argument("--headless")
+            service = Service(GeckoDriverManager().install())
+            page = webdriver.Firefox(
+                options=firefoxOptions,
+                service=service,
+            )
             page.get(url)
             time.sleep(5)
             soup = BeautifulSoup(page.page_source, 'html.parser')
