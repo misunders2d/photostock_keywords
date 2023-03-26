@@ -14,7 +14,7 @@ def get_keywords(stock, url, joins):
     if page.status_code != 200:
         st.write(page.text)
     try:
-        soup = BeautifulSoup(page.content, 'html.parser')
+        soup = BeautifulSoup(page.content, 'lxml')#'html.parser')
         if 'shutterstock' in url:
             script = soup.find('script', id="__NEXT_DATA__", type='application/json')
             for a in script:
