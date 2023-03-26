@@ -1,6 +1,6 @@
 import streamlit as st
 import requests
-from requests_html import HTMLSession
+from selenium import webdriver
 from bs4 import BeautifulSoup
 import json
 
@@ -29,11 +29,11 @@ def get_keywords(stock, url, joins):
                 select = json.loads(a)
             keywords = [i for i in select['props']['pageProps']['asset']['keywords']]
         elif 'getty' in url:
-            asession = HTMLSession()
-            page = asession.get(url,headers = HEADERS)
-            page.html.arender(script = script, reload = False)
-            scripts = page.html.find('script')
-            results = json.loads(scripts[5].text)
+            page = webdriver.Chrome()
+            page.get(url)
+            soup = BeautifulSoup(page.page_source, 'html.parser')
+            scripts = soup.find('script', type = 'application/json')
+            results = json.loads(scripts.getText())
             kw_list = results['asset']['keywords']
             keywords = []
             for kw in kw_list:
