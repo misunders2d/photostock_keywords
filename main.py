@@ -1,8 +1,11 @@
 import streamlit as st
 import requests
 from selenium import webdriver
+from selenium.webdriver.chrome.service import Service as ChromeService
+from webdriver_manager.chrome import ChromeDriverManager
 from bs4 import BeautifulSoup
 import json
+service = ChromeService(executable_path=ChromeDriverManager().install())
 
 
 def get_keywords(stock, url, joins):
@@ -11,15 +14,6 @@ def get_keywords(stock, url, joins):
         "Accept":"text/javascript,text/html,application/xhtml+xml,application/xml; q=0.9,image/webp,image/apng,*/*;q=0.8"
         }
     
-    script = """
-            () => {
-                return {
-                    width: document.documentElement.clientWidth,
-                    height: document.documentElement.clientHeight,
-                    deviceScaleFactor: window.devicePixelRatio,
-                }
-            }
-        """    
     try:
         if 'shutterstock' in url:
             page = requests.get(url, headers = HEADERS)
