@@ -9,8 +9,7 @@ def get_keywords(stock, url, joins):
         'User-Agent':"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36","Accept-Language": "en-US, en;q=0.5"
         }
     page = requests.get(url, headers = HEADERS)
-    status_code = page.status_code
-    if status_code != 200:
+    if page.status_code != 200:
         st.write(page.text)
     try:
         soup = BeautifulSoup(page.content, 'html.parser')
@@ -28,7 +27,7 @@ def get_keywords(stock, url, joins):
                 keywords.append(kw['text'])
         st.session_state['keywords'] = joins.join(keywords)
     except Exception as e:
-        st.session_state['keywords'] = e
+        st.session_state['keywords'] = '\n'.join([e,page.text])
     return None
 
 col1, col2 = st.columns([3,1])
