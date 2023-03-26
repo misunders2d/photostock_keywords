@@ -1,5 +1,6 @@
 import streamlit as st
 import requests
+from requests_html import HTMLSession
 from bs4 import BeautifulSoup
 import json
 
@@ -9,23 +10,19 @@ def get_keywords(stock, url, joins):
         "User-Agent":"Mozilla/5.0 (Macintosh; Intel Mac OSX 10_14_3) AppleWebKit/537.36 (KHTML, like Gecko)Chrome/71.0.3578.98 Safari/537.36",
         "Accept":"text/javascript,text/html,application/xhtml+xml,application/xml; q=0.9,image/webp,image/apng,*/*;q=0.8"
         }
-    # HEADERS = {'User-Agent': 'Mozilla/5.0'}
-    page = requests.get(url, headers = HEADERS)
-    if page.status_code != 200:
-        location = page.headers.get('Location')
-        retry_after = page.headers.get('Retry-After')
-        st.write(location, retry_after)
-
     try:
-        soup = BeautifulSoup(page.content, 'lxml')#'html.parser')
         if 'shutterstock' in url:
+            page = requests.get(url, headers = HEADERS)
+            soup = BeautifulSoup(page.content, 'lxml')#'html.parser')
             script = soup.find('script', id="__NEXT_DATA__", type='application/json')
             for a in script:
                 select = json.loads(a)
             keywords = [i for i in select['props']['pageProps']['asset']['keywords']]
         elif 'getty' in url:
-            script = soup.find('script', type = 'application/json')
-            results = json.loads(script.getText())
+            session = HTMLSession()
+            response = session.get(url)
+            scripts = response.html.find('script')
+            results = json.loads(scripts[5].text)
             kw_list = results['asset']['keywords']
             keywords = []
             for kw in kw_list:
