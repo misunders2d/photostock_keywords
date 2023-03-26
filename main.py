@@ -10,6 +10,16 @@ def get_keywords(stock, url, joins):
         "User-Agent":"Mozilla/5.0 (Macintosh; Intel Mac OSX 10_14_3) AppleWebKit/537.36 (KHTML, like Gecko)Chrome/71.0.3578.98 Safari/537.36",
         "Accept":"text/javascript,text/html,application/xhtml+xml,application/xml; q=0.9,image/webp,image/apng,*/*;q=0.8"
         }
+    
+    script = """
+            () => {
+                return {
+                    width: document.documentElement.clientWidth,
+                    height: document.documentElement.clientHeight,
+                    deviceScaleFactor: window.devicePixelRatio,
+                }
+            }
+        """    
     try:
         if 'shutterstock' in url:
             page = requests.get(url, headers = HEADERS)
@@ -20,8 +30,8 @@ def get_keywords(stock, url, joins):
             keywords = [i for i in select['props']['pageProps']['asset']['keywords']]
         elif 'getty' in url:
             session = HTMLSession()
-            page = session.get(url)
-            page.html.render()
+            page = session.get(url,headers = HEADERS)
+            page.html.arender(script = script, reload = False)
             scripts = page.html.find('script')
             results = json.loads(scripts[5].text)
             kw_list = results['asset']['keywords']
