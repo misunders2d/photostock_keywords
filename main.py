@@ -12,8 +12,8 @@ def get_keywords(stock, url, joins):
     # HEADERS = {'User-Agent': 'Mozilla/5.0'}
     page = requests.get(url, headers = HEADERS)
     if page.status_code != 200:
-        location = response.headers.get('Location')
-        retry_after = response.headers.get('Retry-After')
+        location = page.headers.get('Location')
+        retry_after = page.headers.get('Retry-After')
         st.write(location, retry_after)
 
     try:
