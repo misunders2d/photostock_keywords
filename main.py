@@ -60,7 +60,7 @@ links = {
     }
 st.write(f'[{links[selected_stock]}]({links[selected_stock]})')
 st.markdown('Or enter the image URL:')
-url = st.text_input('url', key = 'URL', label_visibility='hidden',value='https://www.gettyimages.com/detail/photo/ambulance-crew-preparing-casualty-royalty-free-image/1434716784')
+url = st.text_input('url', key = 'URL', label_visibility='hidden')
 if selected_stock == 'Shutterstock' and url != '':
     url = url.replace('www.shutterstock.com/ru','www.shutterstock.com')
 
