@@ -1,6 +1,5 @@
 import streamlit as st
 import requests
-# import urllib.request
 from bs4 import BeautifulSoup
 import json
 
