@@ -21,6 +21,7 @@ def get_keywords(stock, url, joins):
         elif 'getty' in url:
             session = HTMLSession()
             page = session.get(url)
+            page.html.render()
             scripts = page.html.find('script')
             results = json.loads(scripts[5].text)
             kw_list = results['asset']['keywords']
