@@ -8,8 +8,9 @@ def get_keywords(stock, url, joins):
     HEADERS = {
         'User-Agent':"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36","Accept-Language": "en-US, en;q=0.5"
         }
+    page = requests.get(url, headers = HEADERS)
+    st.write(page.status_code)
     try:
-        page = requests.get(url, headers = HEADERS)
         soup = BeautifulSoup(page.content, 'html.parser')
         if 'shutterstock' in url:
             script = soup.find('script', id="__NEXT_DATA__", type='application/json')
