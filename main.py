@@ -7,7 +7,7 @@ import json
 def get_keywords(stock, url, joins):
     HEADERS = {
         "User-Agent":"Mozilla/5.0 (Macintosh; Intel Mac OSX 10_14_3) AppleWebKit/537.36 (KHTML, like Gecko)Chrome/71.0.3578.98 Safari/537.36",
-        "Accept":"application/javascript,text/html,application/xhtml+xml,application/xml; q=0.9,image/webp,image/apng,*/*;q=0.8"
+        "Accept":"text/javascript,text/html,application/xhtml+xml,application/xml; q=0.9,image/webp,image/apng,*/*;q=0.8"
         }
     # HEADERS = {'User-Agent': 'Mozilla/5.0'}
     page = requests.get(url, headers = HEADERS)
