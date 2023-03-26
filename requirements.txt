@@ -1,4 +1,5 @@
 streamlit
 beautifulsoup4
 selenium
+seleniumbase
 webdriver-manager
