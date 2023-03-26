@@ -1,16 +1,15 @@
 import streamlit as st
 import requests
 from selenium import webdriver
-from selenium.common.exceptions import TimeoutException
-from selenium.webdriver.common.by import By
-from selenium.webdriver.firefox.options import Options
-from selenium.webdriver.firefox.service import Service
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.support.ui import WebDriverWait
-from webdriver_manager.firefox import GeckoDriverManager
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.service import Service
+from webdriver_manager.chrome import ChromeDriverManager
 from bs4 import BeautifulSoup
 import json
 import time
+
+def get_driver(options):
+    return webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
 
 def get_keywords(stock, url, joins):
     HEADERS = {
@@ -27,13 +26,11 @@ def get_keywords(stock, url, joins):
                 select = json.loads(a)
             keywords = [i for i in select['props']['pageProps']['asset']['keywords']]
         elif 'getty' in url:
-            firefoxOptions = Options()
-            firefoxOptions.add_argument("--headless")
-            service = Service(GeckoDriverManager().install())
-            page = webdriver.Firefox(
-                options=firefoxOptions,
-                service=service,
-            )
+            options = Options()
+            options.add_argument('--disable-gpu')
+            options.add_argument('--headless')
+
+            page = get_driver(options)
             page.get(url)
             time.sleep(5)
             soup = BeautifulSoup(page.page_source, 'html.parser')
