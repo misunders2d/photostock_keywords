@@ -1,4 +1,5 @@
 import streamlit as st
+from st_keyup import st_keyup
 import requests
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
@@ -8,7 +9,11 @@ from bs4 import BeautifulSoup
 import json
 import time
 
-def get_driver(options):
+@st.cache_resource(show_spinner=False)
+def get_driver():
+    options = Options()
+    options.add_argument('--disable-gpu')
+    options.add_argument('--headless')
     return webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
 
 def get_keywords(stock, url, joins):
@@ -26,11 +31,7 @@ def get_keywords(stock, url, joins):
                 select = json.loads(a)
             keywords = [i for i in select['props']['pageProps']['asset']['keywords']]
         elif 'getty' in url:
-            options = Options()
-            options.add_argument('--disable-gpu')
-            options.add_argument('--headless')
-
-            page = get_driver(options)
+            page = get_driver()
             page.get(url)
             time.sleep(5)
             soup = BeautifulSoup(page.page_source, 'html.parser')
@@ -39,7 +40,7 @@ def get_keywords(stock, url, joins):
             kw_list = results['asset']['keywords']
             keywords = []
             for kw in kw_list:
-                keywords.append(kw['text'])
+                keywords.append(kw['text'].lower())
         st.session_state['keywords'] = joins.join(keywords)
     except Exception as e:
         st.session_state['keywords'] = e
@@ -53,7 +54,7 @@ elif selected_stock == 'Getty':
     col2.image('https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/Getty_Images_Logo.svg/207px-Getty_Images_Logo.svg.png?20180727163711')
 
 st.markdown('Enter a search term to search:')
-search_phrase = st.text_input('search string', key = 'SEARCH', label_visibility='hidden')
+search_phrase = st_keyup('search string', key = 'SEARCH', label_visibility='hidden')
 links = {
     'Getty':f"https://www.gettyimages.com/search/2/image?family=creative&phrase={search_phrase.replace(' ','%20')}&sort=mostpopular&mediatype=photography",
     'Shutterstock':f"https://www.shutterstock.com/search/{search_phrase.replace(' ','-')}?image_type=photo"
@@ -65,7 +66,7 @@ if selected_stock == 'Shutterstock' and url != '':
     url = url.replace('www.shutterstock.com/ru','www.shutterstock.com')
 
 join_type = {'comma':', ','paragraph':'\n'}
-joins = st.radio('label',join_type.keys(), horizontal= True)
+joins = st.radio('label',join_type.keys(), horizontal= True, label_visibility= 'hidden')
 if url != '':
     if st.button('Get Keywords'):
         get_keywords(selected_stock, url, join_type[joins])

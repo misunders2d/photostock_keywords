@@ -1,4 +1,5 @@
 streamlit
+streamlit-keyup
 beautifulsoup4
 selenium
 seleniumbase
