@@ -23,7 +23,7 @@ def get_keywords(stock, url, joins):
                 select = json.loads(a)
             keywords = [i for i in select['props']['pageProps']['asset']['keywords']]
         elif 'getty' in url:
-            page = webdriver.Chrome()
+            page = webdriver.Chrome(service=service)
             page.get(url)
             soup = BeautifulSoup(page.page_source, 'html.parser')
             scripts = soup.find('script', type = 'application/json')
