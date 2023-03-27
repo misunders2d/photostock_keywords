@@ -53,8 +53,12 @@ if selected_stock == 'Shutterstock':
 elif selected_stock == 'Getty':
     col2.image('https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/Getty_Images_Logo.svg/207px-Getty_Images_Logo.svg.png?20180727163711')
 
-st.markdown('Enter a search term to search:')
+search_col1, search_col2 = st.columns([4,1])
+search_col1.markdown('Enter a search term to search:')
 search_phrase = st_keyup('search string', key = 'SEARCH', label_visibility='hidden')
+# if search_col2.button('Clear'):
+#     st.session_state['SEARCH'] = ''
+
 links = {
     'Getty':f"https://www.gettyimages.com/search/2/image?family=creative&phrase={search_phrase.replace(' ','%20')}&sort=mostpopular&mediatype=photography",
     'Shutterstock':f"https://www.shutterstock.com/search/{search_phrase.replace(' ','-')}?image_type=photo"
@@ -68,8 +72,7 @@ if selected_stock == 'Shutterstock' and url != '':
 join_type = {'comma':', ','paragraph':'\n'}
 joins = st.radio('label',join_type.keys(), horizontal= True, label_visibility= 'hidden')
 if url != '':
-    if st.button('Get Keywords'):
-        get_keywords(selected_stock, url, join_type[joins])
+    get_keywords(selected_stock, url, join_type[joins])
 if 'keywords' in st.session_state:
     if st.session_state['keywords']:
         st.text_area('Keywords:',st.session_state['keywords'], height=300)
