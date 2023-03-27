@@ -9,7 +9,7 @@ from bs4 import BeautifulSoup
 import json
 import time
 
-st.set_page_config(page_title='Photostock Keywords')
+st.set_page_config(page_title='Photostock Keywords', page_icon='media/favicon.png')
 
 @st.cache_resource(show_spinner=False)
 def get_driver():
