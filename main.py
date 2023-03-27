@@ -9,6 +9,8 @@ from bs4 import BeautifulSoup
 import json
 import time
 
+st.set_page_config(page_title='Photostock Keywords')
+
 @st.cache_resource(show_spinner=False)
 def get_driver():
     options = Options()
