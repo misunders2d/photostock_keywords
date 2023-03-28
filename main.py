@@ -4,6 +4,7 @@ import requests
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
+from selenium.common.exceptions import InvalidSessionIdException
 from webdriver_manager.chrome import ChromeDriverManager
 from bs4 import BeautifulSoup
 import json
@@ -16,9 +17,10 @@ def get_driver():
     options = Options()
     options.add_argument('--disable-gpu')
     options.add_argument('--headless')
+    options.add_argument('--disable-blink-features=AutomationControlled')
     return webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
 
-def get_keywords(stock, url, joins):
+def get_keywords(stock, url):
     HEADERS = {
         "User-Agent":"Mozilla/5.0 (Macintosh; Intel Mac OSX 10_14_3) AppleWebKit/537.36 (KHTML, like Gecko)Chrome/71.0.3578.98 Safari/537.36",
         "Accept":"text/javascript,text/html,application/xhtml+xml,application/xml; q=0.9,image/webp,image/apng,*/*;q=0.8"
@@ -37,16 +39,18 @@ def get_keywords(stock, url, joins):
             page.get(url)
             time.sleep(5)
             soup = BeautifulSoup(page.page_source, 'html.parser')
+            page.close()
+            page.quit()
             scripts = soup.find('script', type = 'application/json')
             results = json.loads(scripts.getText())
             kw_list = results['asset']['keywords']
             keywords = []
             for kw in kw_list:
                 keywords.append(kw['text'].lower())
-        st.session_state['keywords'] = joins.join(keywords)
+        st.session_state['keywords'] = keywords
     except Exception as e:
         st.session_state['keywords'] = e
-    return None
+    return st.session_state['keywords']
 
 col1, col2 = st.columns([3,1])
 selected_stock = col1.radio('Select PS',['Shutterstock','Getty'], horizontal= True,label_visibility='hidden')
@@ -73,8 +77,9 @@ if selected_stock == 'Shutterstock' and url != '':
 
 join_type = {'comma':', ','paragraph':'\n'}
 joins = st.radio('label',join_type.keys(), horizontal= True, label_visibility= 'hidden')
-if url != '':
-    get_keywords(selected_stock, url, join_type[joins])
-if 'keywords' in st.session_state:
-    if st.session_state['keywords']:
-        st.text_area('Keywords:',st.session_state['keywords'], height=300)
+if url != '' and 'keywords' not in st.session_state:
+    st.session_state['keywords'] = get_keywords(selected_stock, url)
+if st.button('Reset'):
+    del st.session_state['keywords']
+if joins and 'keywords' in st.session_state:
+    st.text_area('results',join_type[joins].join(st.session_state['keywords']), height=300, label_visibility='hidden')
