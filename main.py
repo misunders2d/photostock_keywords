@@ -8,6 +8,7 @@ from selenium.common.exceptions import InvalidSessionIdException
 from webdriver_manager.chrome import ChromeDriverManager
 from bs4 import BeautifulSoup
 import json
+import re
 import time
 
 st.set_page_config(page_title='Photostock Keywords', page_icon='media/favicon.png')
@@ -79,7 +80,13 @@ join_type = {'comma':', ','paragraph':'\n'}
 joins = st.radio('label',join_type.keys(), horizontal= True, label_visibility= 'hidden')
 if url != '' and 'keywords' not in st.session_state:
     st.session_state['keywords'] = get_keywords(selected_stock, url)
-if st.button('Reset'):
+if st.button('Reset') and 'keywords' in st.session_state:
     del st.session_state['keywords']
 if joins and 'keywords' in st.session_state:
     st.text_area('results',join_type[joins].join(st.session_state['keywords']), height=300, label_visibility='hidden')
+with st.expander('Process keywords'):
+    kw_area = st.empty()
+    kws = re.split('\n|,',kw_area.text_area('kws', '', height = 300, label_visibility='hidden'))
+    if st.button('Format'):
+        new_kws = ', '.join([x.lower() for x in kws])
+        kw_area.text_area('updated kws',new_kws)
