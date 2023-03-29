@@ -88,5 +88,5 @@ with st.expander('Process keywords'):
     kw_area = st.empty()
     kws = re.split('\n|,',kw_area.text_area('kws', '', height = 300, label_visibility='hidden'))
     if st.button('Format'):
-        new_kws = ', '.join([x.lower() for x in kws])
+        new_kws = ', '.join([x.lower() for x in kws if x != ''])
         kw_area.text_area('updated kws',new_kws)
