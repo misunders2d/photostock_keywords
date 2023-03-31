@@ -50,7 +50,7 @@ def get_keywords(stock, url):
                 keywords.append(kw['text'].lower())
         st.session_state['keywords'] = keywords
     except Exception as e:
-        st.session_state['keywords'] = [e]
+        st.session_state['keywords'] = [str(e)]
     return st.session_state['keywords']
 
 col1, col2 = st.columns([3,1])
