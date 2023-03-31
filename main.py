@@ -30,7 +30,7 @@ def get_keywords(stock, url):
     try:
         if 'shutterstock' in url:
             page = requests.get(url, headers = HEADERS)
-            soup = BeautifulSoup(page.content, 'lxml')#'html.parser')
+            soup = BeautifulSoup(page.content, 'html.parser')
             script = soup.find('script', id="__NEXT_DATA__", type='application/json')
             for a in script:
                 select = json.loads(a)
