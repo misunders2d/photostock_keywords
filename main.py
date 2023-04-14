@@ -90,13 +90,16 @@ with st.expander('Process keywords'):
     if st.button('Format'):
         new_kws = ', '.join([x.lower() for x in kws if x != ''])
         kw_area.text_area('updated kws',new_kws, height = 300)
-with st.sidebar:
+with st.expander('Convert from paragraphs to comma list', expanded = True):
     input_area = st.empty()
+    convert_button_area = st.empty()
+    button_col1, button_col2 = convert_button_area.columns([1,4])
+    convert_button, clear_button = button_col1.button('Convert'), button_col2.button('Clear')
     initial_kws = input_area.text_area('Input list of keywords ',height = 300)
-    if st.button('Clear'):
+    if clear_button:
         initial_kws = input_area.text_area('Input list of keywords',height = 300)
-    if st.button('Convert'):
+    if convert_button:
         converted_kws = initial_kws.split('\n')
-        converted_kws = [x.lower() for x in converted_kws if x != '']
+        converted_kws = [x.lower().replace(',','').strip() for x in converted_kws if x != '']
         converted_kws = ', '.join(converted_kws)
         input_area.text_area('Results:',converted_kws, height = 300)
