@@ -90,3 +90,13 @@ with st.expander('Process keywords'):
     if st.button('Format'):
         new_kws = ', '.join([x.lower() for x in kws if x != ''])
         kw_area.text_area('updated kws',new_kws, height = 300)
+with st.sidebar:
+    input_area = st.empty()
+    initial_kws = input_area.text_area('Input list of keywords ',height = 300)
+    if st.button('Clear'):
+        initial_kws = input_area.text_area('Input list of keywords',height = 300)
+    if st.button('Convert'):
+        converted_kws = initial_kws.split('\n')
+        converted_kws = [x.lower() for x in converted_kws if x != '']
+        converted_kws = ', '.join(converted_kws)
+        input_area.text_area('Results:',converted_kws, height = 300)
