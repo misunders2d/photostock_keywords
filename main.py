@@ -95,7 +95,7 @@ with st.expander('Convert from paragraphs to comma list', expanded = True):
     convert_button_area = st.empty()
     button_col1, button_col2 = convert_button_area.columns([1,4])
     convert_button, clear_button = button_col1.button('Convert'), button_col2.button('Clear')
-    st.session_state.initial_kws = input_area.text_area('Input list of keywords ',height = 300)
+    st.session_state.initial_kws = input_area.text_area('Input list of keywords',height = 300)
     if clear_button:
         del st.session_state.initial_kws
     if convert_button:
