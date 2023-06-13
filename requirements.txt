@@ -3,6 +3,4 @@ streamlit-keyup
 beautifulsoup4
 selenium
 seleniumbase
-chromium
-chromium-driver
 webdriver-manager
