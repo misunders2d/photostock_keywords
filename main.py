@@ -54,7 +54,7 @@ def get_keywords(stock, url):
     return st.session_state['keywords']
 
 col1, col2 = st.columns([3,1])
-selected_stock = col1.radio('Select PS',['Shutterstock','Getty'], horizontal= True,label_visibility='hidden')
+selected_stock = col1.radio('Select PS',['Getty','Shutterstock'], horizontal= True,label_visibility='hidden', index = 0)
 if selected_stock == 'Shutterstock':
     col2.image('https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Shutterstock_logo.svg/351px-Shutterstock_logo.svg.png?20180715171416')
 elif selected_stock == 'Getty':
