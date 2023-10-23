@@ -54,11 +54,13 @@ def get_keywords(stock, url):
     return st.session_state['keywords']
 
 col1, col2 = st.columns([3,1])
-selected_stock = col1.radio('Select PS',['Getty','Shutterstock'], horizontal= True,label_visibility='hidden', index = 0)
+selected_stock = col1.radio('Select PS',['Getty','Shutterstock','Adobe'], horizontal= True,label_visibility='hidden', index = 0)
 if selected_stock == 'Shutterstock':
     col2.image('https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Shutterstock_logo.svg/351px-Shutterstock_logo.svg.png?20180715171416')
 elif selected_stock == 'Getty':
     col2.image('https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/Getty_Images_Logo.svg/207px-Getty_Images_Logo.svg.png?20180727163711')
+elif selected_stock == 'Adobe':
+    col2.image('https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/Adobe_Systems_logo_and_wordmark.svg/800px-Adobe_Systems_logo_and_wordmark.svg.png')
 
 search_col1, search_col2 = st.columns([4,1])
 search_col1.markdown('Enter a search term to search:')
@@ -68,7 +70,8 @@ search_phrase = st_keyup('search string', key = 'SEARCH', label_visibility='hidd
 
 links = {
     'Getty':f"https://www.gettyimages.com/search/2/image?family=creative&phrase={search_phrase.replace(' ','%20')}&sort=mostpopular&mediatype=photography",
-    'Shutterstock':f"https://www.shutterstock.com/search/{search_phrase.replace(' ','-')}?image_type=photo"
+    'Shutterstock':f"https://www.shutterstock.com/search/{search_phrase.replace(' ','-')}?image_type=photo",
+    'Adobe':f"https://stock.adobe.com/search?k={search_phrase.replace(' ','+')}&search_type=usertyped"
     }
 st.write(f'[{links[selected_stock]}]({links[selected_stock]})')
 st.markdown('Or enter the image URL:')
