@@ -78,6 +78,8 @@ st.markdown('Or enter the image URL:')
 url = st.text_input('url', key = 'URL', label_visibility='hidden')
 if selected_stock == 'Shutterstock' and url != '':
     url = url.replace('www.shutterstock.com/ru','www.shutterstock.com')
+elif selected_stock == 'Adobe' and url != '':
+    url = url.replace('stock.adobe.com/ua','stock.adobe.com/')
 
 join_type = {'comma':', ','paragraph':'\n'}
 joins = st.radio('label',join_type.keys(), horizontal= True, label_visibility= 'hidden')
