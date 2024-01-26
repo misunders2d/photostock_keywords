@@ -127,5 +127,6 @@ with st.expander('Convert from paragraphs to comma list', expanded = False):
 
 with st.expander('Separate keywords with commas', expanded = True):
     input_kws = st.text_area('keywords')
+    output_kws = st.empty()
     if st.button('Process keywords'):
-        st.write(ai_keywords(input_kws))
+        output_kws.write(ai_keywords(input_kws))
