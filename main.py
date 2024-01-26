@@ -10,6 +10,10 @@ from bs4 import BeautifulSoup
 import json
 import re
 import time
+from openai import OpenAI
+import os
+
+AI_KEY = os.environ['AI_KEY']
 
 st.set_page_config(page_title='Photostock Keywords', page_icon='media/favicon.png')
 
@@ -53,8 +57,20 @@ def get_keywords(stock, url):
         st.session_state['keywords'] = [str(e)]
     return st.session_state['keywords']
 
+def ai_keywords(kws):
+    client = OpenAI(api_key = AI_KEY)
+    response = client.chat.completions.create(
+        model="gpt-4-turbo-preview",
+        messages=[
+            {"role": "system", "content": "You are an assistant helping me work with photostock keywords"},
+            {"role": "user", "content": f"Here is the list of keywords which are all merged together. Please separate each keyword with a comma:\n{kws}"},
+            ]
+            )
+    return response.choices[0].message.content
+
 col1, col2 = st.columns([3,1])
-selected_stock = col1.radio('Select PS',['Getty','Shutterstock','Adobe'], horizontal= True,label_visibility='hidden', index = 0)
+# selected_stock = col1.radio('Select PS',['Getty','Shutterstock','Adobe'], horizontal= True,label_visibility='hidden', index = 0)
+selected_stock = col1.radio('Select PS',['Getty','Shutterstock'], horizontal= True,label_visibility='hidden', index = 0)
 if selected_stock == 'Shutterstock':
     col2.image('https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Shutterstock_logo.svg/351px-Shutterstock_logo.svg.png?20180715171416')
 elif selected_stock == 'Getty':
@@ -95,7 +111,7 @@ with st.expander('Process keywords'):
     if st.button('Format'):
         new_kws = ', '.join([x.lower() for x in kws if x != ''])
         kw_area.text_area('updated kws',new_kws, height = 300)
-with st.expander('Convert from paragraphs to comma list', expanded = True):
+with st.expander('Convert from paragraphs to comma list', expanded = False):
     input_area = st.empty()
     convert_button_area = st.empty()
     button_col1, button_col2 = convert_button_area.columns([1,4])
@@ -108,3 +124,8 @@ with st.expander('Convert from paragraphs to comma list', expanded = True):
         kw_list = [x.lower().replace(',','').strip() for x in kw_list if x != '']
         st.session_state.converted_kws = ', '.join(kw_list)
         input_area.text_area('Results:',st.session_state.converted_kws, height = 300)
+
+with st.expander('Separate keywords with commas', expanded = True):
+    input_kws = st.text_area('keywords')
+    if st.button('Process keywords'):
+        st.write(ai_keywords(input_kws))
