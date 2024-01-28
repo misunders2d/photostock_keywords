@@ -126,7 +126,12 @@ with st.expander('Convert from paragraphs to comma list', expanded = False):
         input_area.text_area('Results:',st.session_state.converted_kws, height = 300)
 
 with st.expander('Separate keywords with commas', expanded = True):
-    input_kws = st.text_area('keywords')
-    output_kws = st.empty()
-    if st.button('Process keywords'):
-        output_kws.write(ai_keywords(input_kws))
+    input_area2 = st.empty()
+    convert_button_area2 = st.empty()
+    aibutton_col1, aibutton_col2 = convert_button_area2.columns([1,3])
+    aiconvert_button, aiclear_button = aibutton_col1.button('Process keywords'), aibutton_col2.button('Clear', key = 'ai')
+    st.session_state.ai_kws = input_area2.text_area('Input joined keywords',height = 300)
+    if aiclear_button:
+        del st.session_state.ai_kws
+    if aiconvert_button:
+        input_area2.text_area('Results:',ai_keywords(st.session_state.ai_kws), height = 300)
