@@ -63,7 +63,7 @@ def ai_keywords(kws):
         model="gpt-4-turbo-preview",
         messages=[
             {"role": "system", "content": "You are an assistant helping me work with photostock keywords"},
-            {"role": "user", "content": f"Here is the list of keywords which are all merged together. Please separate each keyword with a comma:\n{kws}"},
+            {"role": "user", "content": f"Please disregard all previous context. Here is the list of keywords which are all merged together. Please separate each keyword with a comma:\n{kws}"},
             ]
             )
     return response.choices[0].message.content
