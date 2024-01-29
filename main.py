@@ -60,7 +60,7 @@ def get_keywords(stock, url):
 def ai_keywords(kws):
     client = OpenAI(api_key = AI_KEY)
     response = client.chat.completions.create(
-        model="gpt-4-turbo-preview",
+        model="gpt-4-0125-preview",
         messages=[
             {"role": "system", "content": "You are an assistant helping me work with photostock keywords"},
             {"role": "user", "content": f"Please disregard all previous context. Here is the list of keywords which are all merged together. Please separate each keyword with a comma:\n{kws}"},
